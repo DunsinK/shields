@@ -8,7 +8,7 @@ function packageVersionTree(version, packageName) {
   return {
     type: 'tree',
     name: version,
-    objects: {
+    object: {
       entries: [{ type: 'blob', name: `${packageName}.yaml` }],
     },
   }
@@ -39,8 +39,8 @@ t.create('gets release date for latest version (not ASCII order)')
                 repository: {
                   object: {
                     entries: [
-                      packageVersionTree('0.200.170', 'Microsoft.DevHome'),
-                      packageVersionTree('0.1201.422.0', 'Microsoft.DevHome'),
+                      packageVersionTree('0.200.170.0', 'Microsoft.DevHome'),
+                      packageVersionTree('0.1201.442.0', 'Microsoft.DevHome'),
                     ],
                   },
                 },
