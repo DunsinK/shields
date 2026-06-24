@@ -3,7 +3,7 @@ import { createServiceTester } from '../tester.js'
 
 export const t = await createServiceTester()
 
-// helper function for readiblity
+// minimal winget-package tree/manifest fixtures
 function packageVersionTree(version, packageName) {
   return {
     type: 'tree',
@@ -23,7 +23,7 @@ t.create('release date for WSL')
   .get('/release-date/Microsoft.WSL.json')
   .expectBadge({ label: 'release date', message: isFormattedDate })
 
-// test sort based on dotted version order instead of ASCII
+// 0.200.170 would sort higher in ASCII, 0.1201.422.0 is latest in winget order
 t.create('gets release date for latest version (not ASCII order)')
   .intercept(nock =>
     nock('https://api.github.com/')
@@ -68,9 +68,9 @@ t.create('gets release date for latest version (not ASCII order)')
       }),
   )
   .get('/release-date/Microsoft.DevHome.json')
-  .expectBadge({ label: 'release date', message: isFormattedDate })
+  .expectBadge({ label: 'release date', message: 'march 2024' })
 
-//
+// 2404 is Ubuntu 24.04 sub-package folder, NOT canonical Ubuntu 24.04
 t.create('do not pick sub-package release date')
   .intercept(nock =>
     nock('https://api.github.com/')
@@ -110,7 +110,7 @@ t.create('do not pick sub-package release date')
               data: {
                 repository: {
                   object: {
-                    text: 'PackageIdentifier: Canonical.Ubuntu\nReleaseDate: 2024-03-15\n',
+                    text: manifestText('Canonical.Ubuntu', '2024-03-15'),
                   },
                 },
               },
@@ -121,4 +121,4 @@ t.create('do not pick sub-package release date')
       }),
   )
   .get('/release-date/Canonical.Ubuntu.json')
-  .expectBadge({ label: 'release date', message: isFormattedDate })
+  .expectBadge({ label: 'release date', message: 'march 2024' })
